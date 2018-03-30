@@ -12,11 +12,13 @@ RUN apk add --update --no-cache \
 COPY source/squid.conf /etc/squid/squid.conf
 COPY source/syslogd.conf /etc/syslogd.conf
 
-RUN mkdir -p /etc/squid/squid.d && \
+RUN mkdir -p /etc/squid/conf.d && touch /etc/squid/conf.d/null.conf && \
     ln -sf /dev/stdout /var/log/squid/access.log && \
     ln -sf /dev/stdout /var/log/squid/store.log && \
     ln -sf /dev/stdout /var/log/squid/cache.log && \
-    chown -R squid:squid /var/log/squid && chmod -R u+rwx /var/log/squid
+    chown -R squid:squid /var/log/squid && chmod -R u+rwx /var/log/squid && \
+    squid -NYCs -d 0 -z &>/dev/null
+
 
 EXPOSE 3128
 
